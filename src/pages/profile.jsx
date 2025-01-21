@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useUserContext } from "../customHooks/UserContext";
+import { useNavigate } from "react-router-dom";
+import Loading from "../components/loading";
 
 const Profile = () => {
     const [data, setData] = useState();
     const user = useUserContext();
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -21,10 +24,13 @@ const Profile = () => {
         };
         fetchUserData();
     }, [user.userId]);
+    const handleApplied = () => {
+        navigate('/profile/myforms')
+    }
 
     return (
         <div className="w-full mt-[50px] mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 flex flex-col relative">
-            <div className="w-full mx-auto bg-white dark:bg-gray-800 rounded-xl p-8 flex flex-col md:flex-row items-center">
+            <div className="w-full mx-auto px-[50px] bg-white dark:bg-gray-800 rounded-xl p-8 flex flex-col md:flex-row items-center">
                 {data ? (
                     <>
                         <div className="flex flex-col items-start w-full space-y-4">
@@ -33,7 +39,7 @@ const Profile = () => {
                             <p className="md:text-2xl text-xl text-gray-800 dark:text-white">{data.email}</p>
                             <p className="text-lg text-gray-600 dark:text-gray-300">{data.college}</p>
                         </div>
-                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden border-4 border-gradient-to-r from-teal-400 to-blue-500 shadow-lg ml-0 md:mr-[100px] mt-6 md:mt-0">
+                        <div className="w-32 h-32 md:w-40 md:h-40 rounded-lg overflow-hidden border-4 border-gradient-to-r from-teal-400 to-blue-500 shadow-lg ml-0 mt-6 md:mt-0">
                             <img
                                 src={data.photoURL || "https://via.placeholder.com/150"}
                                 alt="Profile"
@@ -42,17 +48,19 @@ const Profile = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="flex justify-center items-center text-gray-600 dark:text-gray-300">
-                        <svg className="w-12 h-12 text-gray-800 animate-spin dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0115.172 4.828l-1.414-1.415A6 6 0 106 12h-2z"></path>
-                        </svg>
-                    </div>
+                    <Loading />
                 )}
             </div>
-            <button className="w-[175px] h=[700px] mx-8 px-6 py-2 mt-5 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-md transition duration-300 transform hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-  Applied Forms
-</button>
+            <div className="flex">
+                <button className="w-[175px] h=[700px] md:mx-11 mx-auto px-6 py-2 mt-5 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-md transition duration-300 transform hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400" onClick={handleApplied}>
+                    Applied Forms
+                </button>
+                <button
+                    onClick={() => navigate(-1)}
+                    className="w-[175px] h=[700px] md:mx-11 mx-auto px-6 py-2 mt-5 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow-md transition duration-300 transform hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    Go Back
+                </button>
+            </div>
         </div>
     );
 };

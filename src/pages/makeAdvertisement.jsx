@@ -37,7 +37,6 @@ const MakeAdvertisement = () => {
         })
 
         const data1 = await response1.json();
-        alert(data1.message);
 
         // updating user
 

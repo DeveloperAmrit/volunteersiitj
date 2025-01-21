@@ -62,7 +62,6 @@ const MakeNews = () => {
           console.log(imageURLFinal);
       
         } catch (error) {
-          alert("Error uploading image:", error);
           return;
         }
       }
@@ -86,7 +85,6 @@ const MakeNews = () => {
       })
 
       const data2 = await response2.json();
-      alert(data2.message);
 
 
       // Updating user in DB

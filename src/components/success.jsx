@@ -15,45 +15,45 @@ const SuccessMessage = ({ title, message, state }) => {
     };
 
     return (
-        <div className="w-[230px] fixed top-0 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="w-[250px] fixed top-0 left-1/2 transform -translate-x-1/2 z-50">
             <motion.div
-                className="bg-gradient-to-r from-white to-gray-50 text-green-500 shadow-lg py-2 flex flex-col items-center border border-gray-800 shadow-white/25 dark:shadow-black/75"
-                initial={{ opacity: 0, y: -100 }}
+                className="bg-gradient-to-r from-green-100 to-green-200 text-green-600 py-3 px-4 rounded-b-lg flex flex-col items-center border border-gray-200 shadow-lg dark:shadow-black/60"
+                initial={{ opacity: 0, y: -80 }}
                 animate={{
                     opacity: isAnimating ? 1 : 0,
-                    y: isAnimating ? 0 : -100,
+                    y: isAnimating ? 0 : -80,
                 }}
-                transition={{ duration: 0.3, delayChildren: 1}}
+                transition={{ duration: 0.5 }}
             >
-                <div className="flex items-center px-3">
+                <div className="flex items-center space-x-4">
                     <motion.i
-                        className="fas fa-check-circle text-green-500 fa-2x mr-7"
-                        initial={{ scale: 0.9 }}
+                        className="fas fa-check-circle text-green-600 text-3xl"
+                        initial={{ scale: 0.8 }}
                         animate={{ scale: 1 }}
                         transition={{
                             type: "spring",
-                            repeat: Infinity,
-                            repeatType: "reverse",
+                            stiffness: 100,
+                            damping: 10,
                         }}
                     />
                     <div className="text-left">
                         <div className="text-xl font-semibold text-gray-800">{title}</div>
-                        <div className="text-sm text-gray-600 mt-1">{message}</div>
+                        <div className="text-sm text-gray-700 mt-1">{message}</div>
                     </div>
                 </div>
-                <div className="relative w-full h-1 mt-1">
+                <div className="relative w-full h-1 mt-2">
                     <motion.div
-                        className="absolute bottom-0 left-0 h-1 bg-blue-600 rounded-sm"
+                        className="absolute bottom-0 left-0 h-1 bg-green-600 rounded-sm"
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
-                        transition={{ duration: 2 }}
+                        transition={{ duration: 3 }}
                         onAnimationComplete={handleProgressComplete}
                     />
                     <motion.div
-                        className="absolute bottom-0 right-0 h-1 bg-blue-300 rounded-sm"
+                        className="absolute bottom-0 right-0 h-1 bg-green-300 rounded-sm"
                         initial={{ width: "100%" }}
                         animate={{ width: "0%" }}
-                        transition={{ duration: 2 }}
+                        transition={{ duration: 3 }}
                     />
                 </div>
             </motion.div>

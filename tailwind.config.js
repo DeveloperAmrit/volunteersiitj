@@ -22,12 +22,14 @@ module.exports = {
           '50%': { width: '100%', left: '0%' },
           '100%': { width: '0%', left: '50%' },
         },
+        rotate: { '0%': { transform: 'rotate(0deg)' }, '100%': { transform: 'rotate(360deg)' } },
       },
       animation: {
         glow: 'glow 2s infinite',
         glowd: 'glowd 2s infinite',
         spinOnce: 'spinOnce 1s ease-in-out', // Play spin once for 1 second
         underline: 'underline 3s infinite',
+        rotate: 'rotate 4s linear infinite',
       },
     },
   },

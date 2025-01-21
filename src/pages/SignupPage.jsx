@@ -47,10 +47,7 @@ export default function SignUpPage() {
         console.log("Failed to register user in database",err);
       }
       console.log("User signed up:", user);
-      alert(`Welcome, ${user.displayName}!`);
     } catch (error) {
-      console.error("Error during sign-up:", error);
-      alert("Sign-up failed. Please try again.");
     }
     navigate('/', {
       state: {title:'Welcome', message:'Successfully created your account'}
