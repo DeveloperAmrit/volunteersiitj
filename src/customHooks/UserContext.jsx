@@ -21,10 +21,17 @@ export function fetchUser(dispatch) {
 
         const data = await response.json();
         console.log('Fetched user data:', data.user);
-        dispatch({
-          type: 'login',
-          user: data.user,
-        });
+        if(data.user){
+          dispatch({
+            type: 'login',
+            user: data.user,
+          });
+        }
+        else{
+          dispatch({
+            type: 'logout',
+          });
+        }
       }
 
       fetchUser(userId);
@@ -81,6 +88,7 @@ function UserReducer(user, action) {
       };
     }
     case 'logout': {
+      localStorage.setItem('user', JSON.stringify(initialUser));
       return initialUser;
     }
     default: {
