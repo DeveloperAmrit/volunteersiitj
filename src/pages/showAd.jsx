@@ -4,6 +4,7 @@ import { useLocation, Link } from 'react-router-dom';
 const ShowAd = () => {
   const location = useLocation();
   const advertisement = location.state?.ad;
+  const showApply = location.state?.showApply;
 
   const content = [];
   for (let component of advertisement.sequence) {
@@ -50,9 +51,11 @@ const ShowAd = () => {
           >
             Back
           </Link>
+          { showApply &&
           <button className="w-44 text-xl tracking-wider px-4 py-2 bg-green-600 text-white rounded-md transform transition-transform duration-200 hover:scale-110 hover:bg-green-700">
             Apply
           </button>
+          }
         </div>
         <div className="w-full px-2 py-2 flex justify-between bg-gray-800 rounded-md shadow-inner">
           <span className={`text-${timeColor}-400 font-semibold text-lg`}>

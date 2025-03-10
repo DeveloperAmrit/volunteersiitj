@@ -16,6 +16,7 @@ async function fetchAllAds() {
 
 const MyForms = () => {
     const [filteredAds, setFilteredAds] = useState([]);
+    const [statusArray, setStatusArray] = useState([]);
     const user = useUserContext();
     const navigate = useNavigate(); // Hook to navigate
 
@@ -34,9 +35,11 @@ const MyForms = () => {
             const appliedForms = await fetchAppliedForms();
 
             const appliedFormIds = appliedForms.map(form => form.id);
+            const appliedFormStatus = appliedForms.map(form => form.status);
             const matchedAds = ads.filter(ad => appliedFormIds.includes(ad.advertisementId));
 
             setFilteredAds(matchedAds);
+            setStatusArray(appliedFormStatus);
         };
 
         fetchData();
@@ -59,8 +62,8 @@ const MyForms = () => {
                 <div className="flex flex-col">
                     <div className="w-full grid grid-cols-1 gap-x-3 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
                         {/* The flex-wrap property ensures the items will wrap if there isn't enough space */}
-                        {filteredAds.map((element) => (
-                            <Card key={element.advertisementId} advertisement={element} boo={false} />
+                        {filteredAds.map((element,index) => (
+                            <Card key={element.advertisementId} advertisement={element} showApply={false} showDeadline={false} formStatus={statusArray[index]} />
                         ))}
 
                     </div>
