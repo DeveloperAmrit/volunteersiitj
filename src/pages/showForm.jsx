@@ -1,8 +1,9 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUserContext } from '../customHooks/UserContext';
 
 const ShowForm = () => {
+  const [responses, setResponses] = useState([]);
   const [radioCount, setRadioCount] = useState(0);
   const location = useLocation();
   const addSequence = location.state?.form;
@@ -15,6 +16,17 @@ const ShowForm = () => {
       setRadioCount(radioCount + 1);
     } else {
       setRadioCount(radioCount - 1);
+    }
+  };
+
+  const handleInputChange = (id, value) => {
+    const index = responses.findIndex(entry => entry.id === id);
+    if (index > -1) {
+      const updatedResponses = [...responses];
+      updatedResponses[index].value = value;
+      setResponses(updatedResponses);
+    } else {
+      setResponses([...responses, { id, value }]);
     }
   };
 
@@ -37,10 +49,13 @@ const ShowForm = () => {
         case 'all':
           fileTypes.push('*');
           break;
+        default:
+          break;
       }
     });
     return fileTypes.join(',');
   };
+
   const handleSubmitClick = async () => {
     try {
       const body = {
@@ -48,7 +63,7 @@ const ShowForm = () => {
         updates: {
           appliedForms: {
             id: addSequence.advertisementId,
-            status: 'pending'
+            status: 'pending',
           },
         },
       };
@@ -60,11 +75,21 @@ const ShowForm = () => {
         },
         body: JSON.stringify(body),
       });
+      const response2 = await fetch('http://localhost:5000/submitForm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId : user.userId,
+          adId: addSequence.advertisementId,
+          data: responses
+        }),
+      })
 
-      const data = await response.json();
       navigate('/', {
         state: { title: addSequence.title, message: `Applied Successfully` }
-      })
+      });
     } catch (err) {
       console.log('Failed to register user in database', err);
     }
@@ -72,7 +97,6 @@ const ShowForm = () => {
 
   return (
     <div className="mt-[50px] mx-auto max-w-auto p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg relative overflow-hidden text-black dark:text-black">
-      {/* Form Section */}
       {formSequence.map((form, index) => {
         return (
           <div key={index} className="mb-6 z-[1]">
@@ -85,11 +109,12 @@ const ShowForm = () => {
                   placeholder={form.label}
                   className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                   required={form.isMandatory}
+                  onChange={(e) => handleInputChange(form.id, e.target.value)}
                 />
               </div>
             )}
 
-            {/* Number Inputs (Hide Increase/Decrease buttons using Tailwind) */}
+            {/* Number Inputs */}
             {form.type === 'number' && (
               <div>
                 <label className="text-xl font-semibold text-gray-700 dark:text-gray-200">{form.label}</label>
@@ -100,6 +125,7 @@ const ShowForm = () => {
                   max={form.max}
                   className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 appearance-none"
                   required={form.isMandatory}
+                  onChange={(e) => handleInputChange(form.id, e.target.valueAsNumber)}
                 />
               </div>
             )}
@@ -113,6 +139,7 @@ const ShowForm = () => {
                   placeholder={form.label}
                   className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                   required={form.isMandatory}
+                  onChange={(e) => handleInputChange(form.id, e.target.value)}
                 />
               </div>
             )}
@@ -121,19 +148,21 @@ const ShowForm = () => {
             {form.type === 'dropdown' && (
               <div>
                 <label className="text-xl font-semibold text-gray-700 dark:text-gray-200">{form.label}</label>
-                <select className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                  {form.options.map((option, index) => {
-                    return (
-                      <option key={index} value={option}>
-                        {option}
-                      </option>
-                    );
-                  })}
+                <select
+                  className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                  onChange={(e) => handleInputChange(form.id, e.target.value)}
+                  value={responses.find(entry => entry.id === form.id)?.value || ''}
+                >
+                  {form.options.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}
 
-            {/* Radio Inputs (Checkbox Style) */}
+            {/* Radio Inputs */}
             {form.type === 'checkbox' && (
               <div>
                 <label className="text-xl font-semibold text-gray-700 dark:text-gray-200">{form.label}</label>
@@ -198,7 +227,10 @@ const ShowForm = () => {
         );
       })}
 
-      <button className="w-full bg-green-400 text-white p-3 rounded-lg mt-5 hover:bg-green-500 focus:ring-2 focus:ring-blue-500 active:scale-95 dark:bg-green-600 dark:hover:bg-green-500" onClick={() => handleSubmitClick()}>
+      <button
+        className="w-full bg-green-400 text-white p-3 rounded-lg mt-5 hover:bg-green-500 focus:ring-2 focus:ring-blue-500 active:scale-95 dark:bg-green-600 dark:hover:bg-green-500"
+        onClick={handleSubmitClick}
+      >
         Submit
       </button>
     </div>

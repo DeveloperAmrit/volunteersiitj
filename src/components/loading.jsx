@@ -43,7 +43,7 @@ const Loading = () => {
               repeat: Infinity,
               duration: 2,
               ease: "easeInOut",
-              delay: index * 0.2
+              delay: index * 0.01
             }}
           />
         ))}
